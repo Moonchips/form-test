@@ -41,8 +41,8 @@ export default {
         try {
           // Note: Use a "from" domain matching an onboarded Email Routing domain in your Cloudflare account.
           await env.EMAIL.send({
-            from: "notifications@yourdomain.com",
-            to: "your-personal@email.com",
+            from: "messages@s31.dev",
+            to: "rtingram@gmail.com",
             subject: "🚨 KV Alert: New Form Submission",
             text: `A new value was added to your KV store!\n\nKey: ${key}\nUsername: ${username}`
           });
