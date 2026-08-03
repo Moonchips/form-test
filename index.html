@@ -1,17 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Submit Data</title>
+  <meta charset="UTF-8">
+  <title>Form Submission</title>
+  <!-- Load the Turnstile API Script -->
+  <script src="https://cloudflare.com" async defer></script>
 </head>
 <body>
-    <h2>Save to KV Store</h2>
-    <!-- Sending form data to the worker's root URL -->
-    <form action="/" method="POST">
-        <label for="username">Name:</label>
-        <input type="text" id="username" name="username" required>
-        <button type="submit">Submit</button>
-    </form>
+
+  <form action="/" method="POST">
+    <label for="username">Username:</label>
+    <input type="text" id="username" name="username" required>
+
+    <!-- Embedded Turnstile Widget Container (Replace with your actual Site Key) -->
+    <div class="cf-turnstile" data-sitekey="0x4AAAAAAEEyBWf1DWeQKkRg" data-theme="light"></div>
+
+    <button type="submit">Submit Form</button>
+  </form>
+
 </body>
 </html>
 

@@ -1,19 +1,13 @@
-// Import your HTML file text directly if using Wrangler bundled assets,
-// or embed your HTML structure inside a template string variable.
 import htmlContent from '../index.html';
 
 export interface Env {
-  // Your existing KV namespace binding
   MY_KV_STORE: KVNamespace;
-
-  // The newly added email binding from your wrangler.toml
   EMAIL: any;
+  TURNSTILE_SECRET_KEY: string; // Map the key from wrangler.toml
 }
 
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
-    const url = new URL(request.url);
-
     // 1. Serve the HTML Form on GET requests
     if (request.method === "GET") {
       return new Response(htmlContent, {
@@ -27,30 +21,55 @@ export default {
         const formData = await request.formData();
         const username = formData.get("username");
 
+        // Extract the Turnstile verification token from the payload
+        const turnstileToken = formData.get("cf-turnstile-response");
+        const clientIp = request.headers.get("CF-Connecting-IP") || "";
+
         if (!username) {
           return new Response("Missing name field", { status: 400 });
         }
 
-        // Generate a unique key name (e.g., user_1718465000)
-        const key = `user_${Date.now()}`;
+        if (!turnstileToken) {
+          return new Response("Security verification token missing.", { status: 400 });
+        }
 
-        // Save the form text value into Cloudflare KV
+        // --- TURNSTILE VALIDATION LAYER ---
+        const verifyBody = new URLSearchParams();
+        verifyBody.append("secret", env.TURNSTILE_SECRET_KEY);
+        verifyBody.append("response", turnstileToken.toString());
+        verifyBody.append("remoteip", clientIp);
+
+        const verifyResponse = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
+          method: "POST",
+          body: verifyBody,
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+        });
+
+        const verificationResult: any = await verifyResponse.json();
+
+        // If Cloudflare detects a bot or modified token, stop execution immediately
+        if (!verificationResult.success) {
+          return new Response("Spam/Bot submission blocked.", { status: 403 });
+        }
+        // ----------------------------------
+
+        // Generate a unique key name and write to storage
+        const key = `user_${Date.now()}`;
         await env.MY_KV_STORE.put(key, username.toString());
 
-        // --- Native Cloudflare Email Sending Block ---
+        // Native Cloudflare Email Sending Block
         try {
-          // Note: Use a "from" domain matching an onboarded Email Routing domain in your Cloudflare account.
           await env.EMAIL.send({
-            from: "messages@s31.dev",
+            from: "notifications@s31.dev",
             to: "rtingram@gmail.com",
             subject: "🚨 KV Alert: New Form Submission",
-            text: `A new value was added to your KV store!\n\nKey: ${key}\nUsername: ${username}`
+            text: `A verified entry was added to your KV store!\n\nKey: ${key}\nUsername: ${username}`
           });
         } catch (emailErr) {
-          // Wrapped in a catch block so a delivery failure won't block the user's success page
           console.error("Failed to send notification email via binding:", emailErr);
         }
-        // ----------------------------------------------
 
         return new Response("Data successfully saved to KV!", { status: 200 });
       } catch (err) {

@@ -5,6 +5,8 @@ main = "src/index.ts"
 binding = "MY_KV_STORE"
 id = "131140ad44d642d58e073a2bbf4c470f"
 
-# Native Cloudflare email binding block
 [[send_email]]
 name = "EMAIL"
+
+[vars]
+TURNSTILE_SECRET_KEY = "0x4AAAAAAEEyBS9cwxkW4zGPayq0TTU-0M4"
