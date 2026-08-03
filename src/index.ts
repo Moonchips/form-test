@@ -1,6 +1,6 @@
 // Import your HTML file text directly if using Wrangler bundled assets,
 // or embed your HTML structure inside a template string variable.
-import htmlContent from './index.html';
+import htmlContent from '../index.html';
 
 export interface Env {
   // This must match the binding name you choose in your wrangler.toml
