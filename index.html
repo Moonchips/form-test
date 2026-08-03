@@ -610,7 +610,7 @@
   </main>
 
   <dialog class="contact-dialog" id="contact-dialog" aria-labelledby="contact-dialog-title">
-    <!-- Update action="/api/contact" to match the endpoint that verifies Turnstile and sends the message. -->
+    <!-- This form posts to the same Worker that serves the page. -->
     <form class="contact-form" method="post" action="/">
       <header class="dialog-header">
         <div>
