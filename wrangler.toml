@@ -1,5 +1,7 @@
+name = "form-test"
 compatibility_date = "2024-01-01"
 main = "src/index.ts"
+workers_dev = true
 
 [[kv_namespaces]]
 binding = "MY_KV_STORE"
@@ -11,6 +13,3 @@ name = "EMAIL"
 [[routes]]
 pattern = "form-test.s31.dev"
 custom_domain = true
-
-[secrets]
-TURNSTILE_SECRET_KEY = "inherit"
