@@ -19,13 +19,13 @@ export default {
     if (request.method === "POST") {
       try {
         const formData = await request.formData();
-        const username = formData.get("username");
+        const name = formData.get("name");
 
         // Extract the Turnstile verification token from the payload
         const turnstileToken = formData.get("cf-turnstile-response");
         const clientIp = request.headers.get("CF-Connecting-IP") || "";
 
-        if (!username) {
+        if (!name) {
           return new Response("Missing name field", { status: 400 });
         }
 
@@ -57,7 +57,7 @@ export default {
 
         // Generate a unique key name and write to storage
         const key = `user_${Date.now()}`;
-        await env.MY_KV_STORE.put(key, username.toString());
+        await env.MY_KV_STORE.put(key, name.toString());
 
         // Native Cloudflare Email Sending Block
         try {
@@ -65,7 +65,7 @@ export default {
             from: "notifications@s31.dev",
             to: "rtingram@gmail.com",
             subject: "🚨 KV Alert: New Form Submission",
-            text: `A verified entry was added to your KV store!\n\nKey: ${key}\nUsername: ${username}`
+            text: `A verified entry was added to your KV store!\n\nKey: ${key}\nname: ${name}`
           });
         } catch (emailErr) {
           console.error("Failed to send notification email via binding:", emailErr);
