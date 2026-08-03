@@ -1,0 +1,6 @@
+name = "form-test"
+compatibility_date = "2026-08-01"
+
+[[kv_namespaces]]
+binding = "form-data"
+id = "131140ad44d642d58e073a2bbf4c470f"
