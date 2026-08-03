@@ -1,6 +1,8 @@
 {
 	"$schema": "./node_modules/wrangler/config-schema.json",
 	"name": "form-test",
+	"compatibility_date": "2026-08-03",
+	"main": "src/index.ts",
 	"kv_namespaces": [
 		{
 			"binding": "TODO",
