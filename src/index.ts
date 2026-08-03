@@ -3,8 +3,11 @@
 import htmlContent from '../index.html';
 
 export interface Env {
-  // This must match the binding name you choose in your wrangler.toml
+  // Your existing KV namespace binding
   MY_KV_STORE: KVNamespace;
+
+  // The newly added email binding from your wrangler.toml
+  EMAIL: any;
 }
 
 export default {
@@ -33,6 +36,21 @@ export default {
 
         // Save the form text value into Cloudflare KV
         await env.MY_KV_STORE.put(key, username.toString());
+
+        // --- Native Cloudflare Email Sending Block ---
+        try {
+          // Note: Use a "from" domain matching an onboarded Email Routing domain in your Cloudflare account.
+          await env.EMAIL.send({
+            from: "notifications@yourdomain.com",
+            to: "your-personal@email.com",
+            subject: "🚨 KV Alert: New Form Submission",
+            text: `A new value was added to your KV store!\n\nKey: ${key}\nUsername: ${username}`
+          });
+        } catch (emailErr) {
+          // Wrapped in a catch block so a delivery failure won't block the user's success page
+          console.error("Failed to send notification email via binding:", emailErr);
+        }
+        // ----------------------------------------------
 
         return new Response("Data successfully saved to KV!", { status: 200 });
       } catch (err) {

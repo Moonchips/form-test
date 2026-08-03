@@ -4,3 +4,7 @@ main = "src/index.ts"
 [[kv_namespaces]]
 binding = "MY_KV_STORE"
 id = "131140ad44d642d58e073a2bbf4c470f"
+
+# Native Cloudflare email binding block
+[[send_email]]
+name = "EMAIL"
