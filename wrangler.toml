@@ -1,5 +1,5 @@
-name = "form-test"
-compatibility_date = "2026-08-01"
+"$schema" = "./node_modules/wrangler/config-schema.json"
+name = "worker"
 
 [[kv_namespaces]]
 binding = "form-data"
