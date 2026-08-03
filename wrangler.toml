@@ -3,4 +3,4 @@ main = "src/index.ts"
 
 [[kv_namespaces]]
 binding = "MY_KV_STORE"
-id = "0131140ad44d642d58e073a2bbf4c470f"
+id = "131140ad44d642d58e073a2bbf4c470f"
