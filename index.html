@@ -2,35 +2,16 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Contact Form</title>
+    <title>Submit Data</title>
 </head>
 <body>
-    <form id="myForm">
-        <label>Name: <input type="text" name="name" required></label><br>
-        <label>Email: <input type="email" name="email" required></label><br>
+    <h2>Save to KV Store</h2>
+    <!-- Sending form data to the worker's root URL -->
+    <form action="/" method="POST">
+        <label for="username">Name:</label>
+        <input type="text" id="username" name="username" required>
         <button type="submit">Submit</button>
     </form>
-    <p id="status"></p>
-
-    <script>
-        document.getElementById('myForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const formData = new FormData(e.target);
-            const data = Object.fromEntries(formData.entries());
-
-            const res = await fetch('/api/submit', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
-            });
-
-            if (res.ok) {
-                document.getElementById('status').textContent = 'Saved successfully!';
-                e.target.reset();
-            } else {
-                document.getElementById('status').textContent = 'Error saving data.';
-            }
-        });
-    </script>
 </body>
 </html>
+
