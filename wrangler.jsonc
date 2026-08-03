@@ -1,0 +1,10 @@
+{
+	"$schema": "./node_modules/wrangler/config-schema.json",
+	"name": "form-test",
+	"kv_namespaces": [
+		{
+			"binding": "TODO",
+			"id": "0131140ad44d642d58e073a2bbf4c470f"
+		}
+	]
+}
